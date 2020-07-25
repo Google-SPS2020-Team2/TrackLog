@@ -27,3 +27,12 @@ Install Node.js dependencies:
 ```
 $ yarn install
 ```
+
+### Run Applications
+
+```
+$ flask run
+$ yarn serve
+```
+
+Flask will run on port 5000 and Vue will serve on port 8080.
