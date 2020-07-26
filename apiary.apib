@@ -6,6 +6,7 @@ A webapp to track the music pieces you played!
 
 # User's Identity Information Administration
 Provide administration for users' information.
+
 Currently only basic APIs are designed. Features like change nickname or password maybe added later.
 
 ## User Account[/createAccount]
@@ -13,7 +14,9 @@ Provide administration for users' account.
 
 ### Create account [POST]
 Create a new account.
+
 Request: User's nickName and password. Password should be encrypted by frontend before sent to backend.
+
 Response: Return a message to indicate whether the account is created successfully.
 
 + Request (application/json)
@@ -35,6 +38,7 @@ User login.
 
 ### Login [POST]
 Request: The input nickName and password. Password should be encrypted by frontend before sent to backend.
+
 Response: Return a message to indicate whether the user login successfully. If success, return a sessionID for further use.
 
 + Request (application/json)
@@ -84,7 +88,9 @@ Get a list of user's favored music pieces along with their basic information.
 
 ### Add favored music [Post]
 Add a new piece of music
+
 Request: Basic information of the new piece of music.
+
 Response: Return a message to indicate whether the music piece is added successfully.
 
 + Request (application/json)
@@ -128,7 +134,9 @@ Provide administration for users' played music.
 
 ### Marked as played [Post]
 Mark a piece of music to be played.
+
 Request: Basic information of the new piece of music.
+
 Response: Return a message to indicate whether the music piece is added successfully.
 
 + Request (application/json)
