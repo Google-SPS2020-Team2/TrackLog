@@ -5,6 +5,7 @@ steps:
 - name: node:lts
   entrypoint: yarn
   args: ["run", "build"]
-- name: gcr.io/cloud-builders/gcloud
+- name: gcr.io/google.com/cloudsdktool/cloud-sdk
+  entrypoint: gcloud
   args: ["app", "deploy"]
 timeout: "600s"
