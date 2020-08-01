@@ -1,28 +1,34 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <md-app>
+      <md-app-toolbar class="md-primary">
+        <span class="md-title">TrackLog</span>
+      </md-app-toolbar>
+      <md-app-drawer md-permanent="full">
+        <md-toolbar class="md-transparent" md-elevation="0">
+          <md-icon>library_music</md-icon>
+        </md-toolbar>
+        <app-drawer></app-drawer>
+      </md-app-drawer>
+      <md-app-content>
+        <router-view></router-view>
+      </md-app-content>
+    </md-app>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
-
+import AppDrawer from "@/components/AppDrawer";
 export default {
   name: 'App',
   components: {
-    HelloWorld
+    'app-drawer': AppDrawer
   }
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
+.md-drawer {
+  width: unset !important;
 }
 </style>
