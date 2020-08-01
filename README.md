@@ -37,6 +37,7 @@ $ yarn install
 ### Run Applications
 
 ```
+$ flask init-db
 $ flask run
 $ yarn serve
 ```
