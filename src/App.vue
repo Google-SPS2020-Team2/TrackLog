@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <md-app>
+    <md-app style="min-height: 100vh;">
       <md-app-toolbar class="md-primary">
         <span class="md-title">TrackLog</span>
       </md-app-toolbar>

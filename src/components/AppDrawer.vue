@@ -1,6 +1,6 @@
 <template>
   <md-list>
-    <md-list-item to="/">
+    <md-list-item to="/" exact>
       <md-icon>home</md-icon>
       <span class="md-list-item-text">Home</span>
     </md-list-item>
@@ -21,6 +21,6 @@
 
 <script>
 export default {
-  name: 'app-drawer'
+  name: 'AppDrawer'
 }
 </script>
