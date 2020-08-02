@@ -10,14 +10,11 @@ From https://github.com/gtalarico/flask-vuejs-template/ (MIT License)
 
 import os
 from flask import Flask, current_app, send_file
-from flask_cors import CORS
 from .config import Config
 
 app = Flask(__name__, static_folder='../dist/static')
 app.config.from_object(Config)
 
-if app.config['FLASK_ENV'] == 'development':
-    cors = CORS(app)  # enable CORS for developing env
 
 @app.route('/')
 def index_client():
