@@ -13,13 +13,13 @@ from .config import Config
 from .data.database import db
 from .data.database.db import get_db
 from .data.model import music
-
+from .data.model import practice
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 app.register_blueprint(music.bp)
-
+app.register_blueprint(practice.bp)
 
 @app.route('/')
 def index():

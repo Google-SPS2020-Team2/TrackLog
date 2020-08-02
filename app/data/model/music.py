@@ -12,10 +12,15 @@ bp = Blueprint("music", __name__)
 
 @bp.route("/show")
 def show():
-    cur = (get_db().cursor().execute("SELECT * FROM music"))
+    cur = (get_db().cursor().execute(
+        "select id,created,music_name,artist_id,difficulty,\
+        (case when id in (select music_id from practice) then 1\
+        else 0\
+        end) as played \
+        from music"
+    ))
     my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
     return json.dumps(my_query, cls=encoder)
-
 
 @bp.route("/add", methods=("GET", "POST"))
 def add():
@@ -32,22 +37,30 @@ def add():
         if error is not None:
             flash(error)
         else:
-            db = get_db()
-            db.execute(
-                "INSERT INTO music (music_name, artist_id, difficulty) VALUES (?, ?, ?)",
-                (music_name, artist_id, difficulty),
-            )
-            db.commit()
-            return redirect(url_for("hello"))  # TODO change the url
+            cur = (get_db().cursor().execute("SELECT * FROM music where music_name=?", (music_name,)))
+            if len(cur.fetchall()) != 0:
+                return "Music named "+music_name+" already exists"
+            else:
+                db = get_db()
+                db.execute(
+                    "INSERT INTO music (music_name, artist_id, difficulty) VALUES (?, ?, ?)",
+                    (music_name, artist_id, difficulty),
+                )
+                db.commit()
+                return redirect(url_for("hello"))  # TODO change the url
 
     return redirect(url_for("hello"))  # TODO change the url
 
 
 @bp.route('/add_test')  # just for test
 def add_test():
-    get_db().execute("INSERT INTO music (music_name) VALUES ('See you again')")
-    get_db().commit()
-    return 'Add a music successfully'
+    cur = (get_db().cursor().execute("SELECT * FROM music where music_name='See you again'"))
+    if len(cur.fetchall())!=0:
+        return "Music named 'See you again' already exists"
+    else:
+        get_db().execute("INSERT INTO music (music_name) VALUES ('See you again')")
+        get_db().commit()
+        return 'Add a music successfully'
 
 
 @bp.route("/delete", methods=("GET", "POST"))
