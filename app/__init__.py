@@ -9,6 +9,7 @@ From https://github.com/gtalarico/flask-vuejs-template/ (MIT License)
 """
 
 from flask import Flask
+from flask_cors import CORS
 from .config import Config
 from .data.database import db
 from .data.database.db import get_db
@@ -20,6 +21,10 @@ app.config.from_object(Config)
 db.init_app(app)
 app.register_blueprint(music.bp)
 app.register_blueprint(practice.bp)
+
+if app.config['FLASK_ENV'] == 'development':
+  CORS(app)  # enable CORS for developing environment
+
 
 @app.route('/')
 def index():
