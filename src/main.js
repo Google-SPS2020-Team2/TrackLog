@@ -1,6 +1,10 @@
 import Vue from 'vue';
+import axios from 'axios';
 import App from './App.vue'
 import router from './router';
+
+// Use axios for API consumption.
+Vue.prototype.$http = axios;
 
 // It could be a bad idea to import all components after developing.
 // see https://vuematerial.io/getting-started for details.
