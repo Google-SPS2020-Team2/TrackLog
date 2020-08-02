@@ -7,6 +7,7 @@
     <music-info v-for="music in musics"
                 v-bind:key="music.id"
                 v-bind:music="music"
+                v-on:delete="deleteMusic"
     ></music-info>
   </div>
   <div v-else id="no-music">
@@ -43,6 +44,21 @@ export default {
             console.error(err);
             this.message = err;
           });
+    },
+    deleteMusic(musicId) {
+      let index = -1;
+      for (index = 0; index < this.musics.length; ++index) {
+        if (this.musics[index].music_id === musicId) break;
+      }
+      if (index >= this.musics.length) return;
+
+      this.$http.post('/delete', {
+        music_name: this.musics[index].music_name
+      })
+          .then(() => {
+            this.$delete(this.musics, index);
+          })
+          .catch(err => console.log(err));
     }
   }
 }

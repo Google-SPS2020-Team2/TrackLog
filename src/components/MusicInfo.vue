@@ -9,6 +9,9 @@
         <p>Difficulty: {{ music.difficulty }}</p>
       </md-card-content>
       <md-card-actions>
+        <button class="md-button" @click="$emit('delete', music.music_id)">
+          <md-icon>delete</md-icon> &nbsp; <span>Delete</span>
+        </button>
         <button class="md-button">
           <md-icon>favorite</md-icon> &nbsp; <span>Favor</span>
         </button>
