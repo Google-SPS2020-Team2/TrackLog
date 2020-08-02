@@ -4,7 +4,10 @@ import App from './App.vue'
 import router from './router';
 
 // Use axios for API consumption.
-Vue.prototype.$http = axios;
+Vue.prototype.$http = axios.create({
+  baseURL: process.env.VUE_APP_BASE_API,
+  timeout: 5000
+});
 
 // It could be a bad idea to import all components after developing.
 // see https://vuematerial.io/getting-started for details.
