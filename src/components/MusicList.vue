@@ -8,7 +8,7 @@
       Music List
       <button class="md-button"
               style="float: right; margin-top: 0;"
-              @click="showAddMusicDialog = true">
+              @click="addMusicDialogActive = true">
         <md-icon>add_box</md-icon> &nbsp; <span>Add Music</span>
       </button>
     </h2>
@@ -16,13 +16,13 @@
       <music-info v-for="music in musics"
                   v-bind:key="music.id"
                   v-bind:music="music"
-                  v-on:delete="deleteMusic"
+                  v-on:delete="showDeleteMusicDialog"
       ></music-info>
     </div>
     <div v-else id="music-list-empty">
       <p>There is no music to show.</p>
     </div>
-    <md-dialog v-bind:md-active.sync="showAddMusicDialog">
+    <md-dialog v-bind:md-active.sync="addMusicDialogActive">
       <md-dialog-title>Add Music</md-dialog-title>
       <md-dialog-content>
         <form novalidate class="md-layout">
@@ -49,6 +49,14 @@
         </button>
       </md-dialog-actions>
     </md-dialog>
+    <md-dialog-confirm
+      md-title="Delete Music?"
+      v-bind:md-content="'Are you sure you want to delete music ' + deleteMusicName + '?'"
+      md-confirm-text="Yes"
+      md-cancel-text="No"
+      v-bind:md-active.sync="deleteMusicDialogActive"
+      @md-cancel="deleteMusicDialogActive = false"
+      @md-confirm="doDeleteMusic" />
   </div>
 </template>
 
@@ -65,12 +73,15 @@ export default {
       loading: true,
       loadingMessage: 'Loading...',
       musics: [],
-      showAddMusicDialog: false,
+      addMusicDialogActive: false,
       newMusic: {
         music_name: '',
         artist_id: 0,
         difficulty: ''
-      }
+      },
+      deleteMusicDialogActive: false,
+      deleteMusicIndex: 0,
+      deleteMusicName: ''
     }
   },
   created: function () {
@@ -92,22 +103,27 @@ export default {
       this.$http.post('/add', this.newMusic)
           .then(() => {
             this.getMusics();
-            this.showAddMusicDialog = false;
+            this.addMusicDialogActive = false;
           })
           .catch(err => console.error(err));
     },
-    deleteMusic(musicId) {
+    showDeleteMusicDialog(music_id) {
       let index = -1;
       for (index = 0; index < this.musics.length; ++index) {
-        if (this.musics[index].music_id === musicId) break;
+        if (this.musics[index].music_id === music_id) break;
       }
       if (index >= this.musics.length) return;
-
+      this.deleteMusicIndex = index;
+      this.deleteMusicName = this.musics[index].music_name;
+      this.deleteMusicDialogActive = true;
+    },
+    doDeleteMusic() {
       this.$http.post('/delete', {
-        music_name: this.musics[index].music_name
+        music_name: this.deleteMusicName
       })
           .then(() => {
-            this.$delete(this.musics, index);
+            this.$delete(this.musics, this.deleteMusicIndex);
+            this.deleteMusicDialogActive = false;
           })
           .catch(err => console.error(err));
     }
