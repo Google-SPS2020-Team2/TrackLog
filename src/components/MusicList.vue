@@ -8,15 +8,18 @@
       Music List
       <button class="md-button"
               style="float: right; margin-top: 0;"
-              @click="addMusicDialogActive = true">
+              v-on:click="addMusicDialogActive = true">
         <md-icon>add_box</md-icon> &nbsp; <span>Add Music</span>
       </button>
     </h2>
     <div v-if="musics.length" id="music-list-data">
-      <music-info v-for="music in musics"
+      <music-info v-for="(music, index) in musics"
                   v-bind:key="music.id"
+                  v-bind:index="index"
                   v-bind:music="music"
-                  v-on:delete="showDeleteMusicDialog"
+                  v-on:delete="deleteMusic"
+                  v-on:play="playMusic"
+                  v-on:restore="restoreMusic"
       ></music-info>
     </div>
     <div v-else id="music-list-empty">
@@ -41,10 +44,10 @@
         </form>
       </md-dialog-content>
       <md-dialog-actions style="margin: 1rem;">
-        <button class="md-button" @click="showAddMusicDialog = false">
+        <button class="md-button" v-on:click="addMusicDialogActive = false">
           <md-icon>close</md-icon> &nbsp; <span>Cancel</span>
         </button>
-        <button class="md-button" @click="addMusic">
+        <button class="md-button" v-on:click="addMusic">
           <md-icon>check</md-icon> &nbsp; <span>Submit</span>
         </button>
       </md-dialog-actions>
@@ -107,12 +110,7 @@ export default {
           })
           .catch(err => console.error(err));
     },
-    showDeleteMusicDialog(music_id) {
-      let index = -1;
-      for (index = 0; index < this.musics.length; ++index) {
-        if (this.musics[index].music_id === music_id) break;
-      }
-      if (index >= this.musics.length) return;
+    deleteMusic(index) {
       this.deleteMusicIndex = index;
       this.deleteMusicName = this.musics[index].music_name;
       this.deleteMusicDialogActive = true;
@@ -124,6 +122,28 @@ export default {
           .then(() => {
             this.$delete(this.musics, this.deleteMusicIndex);
             this.deleteMusicDialogActive = false;
+          })
+          .catch(err => console.error(err));
+    },
+    playMusic(index) {
+      this.$http.post('/add_practice', {
+        music_id: this.musics[index].id,
+        player_id: 0, // TODO: use real user ID
+        score: 0,
+        content: ''
+      })
+          .then(() => {
+            this.$set(this.musics[index], 'played', true);
+          })
+          .catch(err => console.error(err));
+    },
+    restoreMusic(index) {
+      this.$http.post('/delete_practice', {
+        music_id: this.musics[index].id,
+        player_id: 0, // TODO: use real user ID
+      })
+          .then(() => {
+            this.$set(this.musics[index], 'played', false);
           })
           .catch(err => console.error(err));
     }
