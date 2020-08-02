@@ -13,10 +13,11 @@ def add_practice():
     """Mark a music piece to have been played"""
     error = None
     if request.method == "POST":
-        music_id = request.form["music_id"]
-        player_id = request.form["player_id"]
-        score = request.form["score"]
-        content = request.form["content"]
+        jsonData=request.get_json()
+        music_id = jsonData["music_id"]
+        player_id = jsonData["player_id"]
+        score = jsonData["score"]
+        content = jsonData["content"]
     else: # for test
         music_id=6
         player_id=0
@@ -42,8 +43,9 @@ def add_practice():
 def delete_practice():
     """Marked a piece of music as not played"""
     if request.method == "POST":
-        music_name = request.form["music_id"]
-        player_id = request.form["player_id"]
+        jsonData = request.get_json()
+        music_id = jsonData["music_id"]
+        player_id = jsonData["player_id"]
     else:  # just for test
         music_id=6
         player_id=0

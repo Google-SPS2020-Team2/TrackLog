@@ -26,9 +26,10 @@ def show():
 def add():
     """Create a new post for the current user."""
     if request.method == "POST":
-        music_name = request.form["music_name"]
-        artist_id = request.form["artist_id"]
-        difficulty = request.form["difficulty"]
+        jsonData=request.get_json()
+        music_name = jsonData["music_name"]
+        artist_id = jsonData["artist_id"]
+        difficulty = jsonData["difficulty"]
         error = None
 
         if not music_name:
@@ -68,7 +69,8 @@ def delete():
     """Delete a music.
     """
     if request.method == "POST":
-        music_name = request.form["music_name"]
+        jsonData=request.get_json()
+        music_name = jsonData["music_name"]
     else:  # just for test
         music_name = 'See you again'
     db = get_db()
