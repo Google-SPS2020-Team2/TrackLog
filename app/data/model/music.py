@@ -22,6 +22,7 @@ def show():
     my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
     return json.dumps(my_query, cls=encoder)
 
+
 @bp.route("/add", methods=("GET", "POST"))
 def add():
     """Create a new post for the current user."""
@@ -40,7 +41,7 @@ def add():
         else:
             cur = (get_db().cursor().execute("SELECT * FROM music where music_name=?", (music_name,)))
             if len(cur.fetchall()) != 0:
-                return "Music named "+music_name+" already exists"
+                return "Music named " + music_name + " already exists"
             else:
                 db = get_db()
                 db.execute(
@@ -49,19 +50,14 @@ def add():
                 )
                 db.commit()
                 return redirect(url_for("hello"))  # TODO change the url
-
-    return redirect(url_for("hello"))  # TODO change the url
-
-
-@bp.route('/add_test')  # just for test
-def add_test():
-    cur = (get_db().cursor().execute("SELECT * FROM music where music_name='See you again'"))
-    if len(cur.fetchall())!=0:
-        return "Music named 'See you again' already exists"
     else:
-        get_db().execute("INSERT INTO music (music_name) VALUES ('See you again')")
-        get_db().commit()
-        return 'Add a music successfully'
+        cur = (get_db().cursor().execute("SELECT * FROM music where music_name='See you again'"))
+        if len(cur.fetchall()) != 0:
+            return "Music named 'See you again' already exists"
+        else:
+            get_db().execute("INSERT INTO music (music_name) VALUES ('See you again')")
+            get_db().commit()
+            return 'Add a music successfully'
 
 
 @bp.route("/delete", methods=("GET", "POST"))

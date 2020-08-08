@@ -1,8 +1,6 @@
 from flask import Blueprint
 from flask import request
 from flask import flash
-from flask import url_for
-from flask import redirect
 from app.data.database.db import get_db
 
 bp = Blueprint("practice", __name__)
