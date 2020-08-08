@@ -9,6 +9,22 @@ from app.data.json.encoder import ComplexEncoder as encoder
 
 bp = Blueprint("artist", __name__)
 
+@bp.route("/get_artist_info")
+def show():
+    error=None
+    id = request.args.get("id")
+    if not id:
+        error = "Artist ID is required."
+    if error is not None:
+        flash(error)
+    else:
+        cur = (get_db().cursor().execute(
+            "select artist_name,introduction\
+            from artist\
+            where id="+str(id)
+        ))
+        my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+        return json.dumps(my_query, cls=encoder,ensure_ascii=False)
 
 @bp.route("/show_artist")
 def show_artist():
