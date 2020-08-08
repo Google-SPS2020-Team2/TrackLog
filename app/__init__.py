@@ -14,13 +14,17 @@ from .config import Config
 from .data.database import db
 from .data.database.db import get_db
 from .data.model import music
+from .data.model import player
 from .data.model import practice
+from .data.model import artist
 
 app = Flask(__name__)
 app.config.from_object(Config)
 db.init_app(app)
 app.register_blueprint(music.bp)
 app.register_blueprint(practice.bp)
+app.register_blueprint(player.bp)
+app.register_blueprint(artist.bp)
 
 if app.config['FLASK_ENV'] == 'development':
   CORS(app)  # enable CORS for developing environment
