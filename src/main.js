@@ -2,6 +2,7 @@ import Vue from 'vue';
 import axios from 'axios';
 import App from './App.vue'
 import router from './router';
+import store from './store';
 
 // Use axios for API consumption.
 Vue.prototype.$http = axios.create({
@@ -20,5 +21,6 @@ Vue.config.productionTip = false;
 
 new Vue({
   render: h => h(App),
-  router
+  router,
+  store
 }).$mount('#app');
