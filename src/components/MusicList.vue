@@ -19,8 +19,8 @@
                   v-bind:music="music"
                   v-on:delete="deleteMusic"
                   v-on:play="playMusic"
-                  v-on:restore="restoreMusic"
-      ></music-info>
+                  v-on:restore="restoreMusic">
+      </music-info>
     </div>
     <div v-else id="music-list-empty">
       <p>There is no music to show.</p>
