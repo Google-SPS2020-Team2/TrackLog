@@ -16,7 +16,7 @@ def add_practice():
     if request.method == "POST":
         jsonData=request.get_json()
         music_id = jsonData["music_id"]
-        player_id = jsonData["player_id"]
+        player_id = session['user_id']
         score = jsonData["score"]
         content = jsonData["content"]
     else: # for test
@@ -46,7 +46,7 @@ def delete_practice():
     if request.method == "POST":
         jsonData = request.get_json()
         music_id = jsonData["music_id"]
-        player_id = jsonData["player_id"]
+        player_id = session['user_id']
     else:  # just for test
         music_id=6
         player_id=0
