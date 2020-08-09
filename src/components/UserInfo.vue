@@ -6,6 +6,10 @@
       <img class="avatar" :src="imgsrc">
       <p class = "nickname">nickname</p>
       <p class = "name">name</p>
+      <md-button class="md-accent" style="width: 95%;"
+                 v-on:click="logout()">
+        Logout
+      </md-button>
     </div>
     <div class="music_list">
       <h2 style = "color: rgba(80,80,80,1);">Music list</h2>
@@ -42,6 +46,13 @@ export default {
     this.getMusics();
   },
   methods: {
+    logout() {
+      this.$http.get('/logout')
+        .then(() => {
+          this.$store.commit('userLogout');
+          this.$router.push('/login');
+        });
+    },
     getMusics() {
       this.$http.get('/show')
           .then(res => {
