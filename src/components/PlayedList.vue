@@ -10,11 +10,9 @@
     <div v-if="musics.length" id="music-list-data">
       <music-info v-for="(music, index) in musics"
                   v-bind:key="music.id"
+                  v-bind:simple="true"
                   v-bind:index="index"
-                  v-bind:music="music"
-                  v-on:delete="deleteMusic"
-                  v-on:play="playMusic"
-                  v-on:restore="restoreMusic">
+                  v-bind:music="music">
       </music-info>
     </div>
     <div v-else id="music-list-empty">
@@ -52,16 +50,6 @@ export default {
             console.error(err);
             this.loadingMessage = err;
           });
-    },
-    restoreMusic(index) {
-      this.$http.post('/delete_practice', {
-        music_id: this.musics[index].id,
-        player_id: 0, // TODO: use real user ID
-      })
-          .then(() => {
-            this.$set(this.musics[index], 'played', false);
-          })
-          .catch(err => console.error(err));
     }
   }
 }

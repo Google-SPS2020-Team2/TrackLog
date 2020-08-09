@@ -15,6 +15,7 @@
     <div v-if="musics.length" id="music-list-data">
       <music-info v-for="(music, index) in musics"
                   v-bind:key="music.id"
+                  v-bind:simple="false"
                   v-bind:index="index"
                   v-bind:music="music"
                   v-on:delete="deleteMusic"

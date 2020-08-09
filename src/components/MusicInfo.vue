@@ -13,7 +13,7 @@
           <p>Difficulty: {{ music.difficulty }}</p>
         </div>
       </md-card-content>
-      <md-card-actions>
+      <md-card-actions v-if="!simple">
         <button class="md-button"
                 v-on:click="$emit('delete', index)">
           <md-icon>delete</md-icon> &nbsp; <span>Delete</span>
@@ -35,7 +35,7 @@
 <script>
 export default {
   name: "MusicInfo",
-  props: ['index', 'music'],
+  props: ['simple', 'index', 'music'],
   data: function() {
     return {
       artist: null
