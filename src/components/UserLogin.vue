@@ -1,5 +1,5 @@
 <template>
-  <div id="userLogin">
+  <div id="user-login">
     <h1>Login to TrackLog</h1>
     <md-field>
       <label>Username</label>
@@ -73,7 +73,7 @@ export default {
 </script>
 
 <style scoped>
-#userLogin {
+#user-login {
   max-width: 300px;
 }
 

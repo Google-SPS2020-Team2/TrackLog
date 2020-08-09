@@ -7,7 +7,8 @@ import store from './store';
 // Use axios for API consumption.
 Vue.prototype.$http = axios.create({
   baseURL: process.env.VUE_APP_BASE_API,
-  timeout: 5000
+  timeout: 5000,
+  withCredentials: true
 });
 
 // It could be a bad idea to import all components after developing.
