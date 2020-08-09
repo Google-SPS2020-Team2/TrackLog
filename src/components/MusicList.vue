@@ -111,6 +111,10 @@ export default {
           .catch(err => console.error(err));
     },
     deleteMusic(index) {
+      /**
+       * This method will open a dialog to confirm deletion,
+       * the API request will be made in doDeleteMusic() method.
+       */
       this.deleteMusicIndex = index;
       this.deleteMusicName = this.musics[index].music_name;
       this.deleteMusicDialogActive = true;
