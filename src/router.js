@@ -5,12 +5,14 @@ import AppHome from '@/components/AppHome';
 import MusicList from '@/components/MusicList';
 import PlayedList from '@/components/PlayedList';
 import UserInfo from '@/components/UserInfo';
+import UserLogin from '@/components/UserLogin.vue';
 
 Vue.use(Router);
 
 export default new Router({
   routes: [
     {path: '/', name: 'Home', component: AppHome},
+    {path: '/login', name: 'UserLogin', component: UserLogin},
     {path: '/music', name: 'MusicList', component: MusicList},
     {path: '/played', name: 'PlayedList', component: PlayedList},
     {path: '/user', name: 'UserInfo', component: UserInfo}
