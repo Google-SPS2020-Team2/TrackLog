@@ -53,8 +53,9 @@ def register():
 def login():
     db = get_db()
     if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
+        jsonData=request.get_json()
+        username = jsonData['username']
+        password = jsonData['password']
         error = None
         user = db.execute(
             'SELECT * FROM user WHERE username = ?', (username,)
