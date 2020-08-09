@@ -27,7 +27,12 @@ app.register_blueprint(player.bp)
 app.register_blueprint(artist.bp)
 
 if app.config['FLASK_ENV'] == 'development':
-  CORS(app)  # enable CORS for developing environment
+    """
+    We need to enable CORS header in development environment, as the host of
+    client-side and server-side differs. Besides, Access-Control-Allow-Credentials
+    header must be set to make session and user authentication work.
+    """
+    CORS(app, supports_credentials=True)
 
 
 @app.route('/')
