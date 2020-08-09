@@ -4,6 +4,7 @@ from flask import request
 from flask import flash
 from flask import url_for
 from flask import redirect
+from flask import session
 from app.data.database.db import get_db
 from app.data.json.encoder import ComplexEncoder as encoder
 
@@ -14,7 +15,8 @@ bp = Blueprint("music", __name__)
 def show():
     cur = (get_db().cursor().execute(
         "select id,created,music_name,artist_id,difficulty,\
-        (case when id in (select music_id from practice) then 1\
+        (case when id in (select music_id from practice where player_id="+str(session['user_id'])+
+        ") then 1\
         else 0\
         end) as played \
         from music"
