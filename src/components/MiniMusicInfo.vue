@@ -34,11 +34,13 @@ export default {
         params: {
           id: this.music.artist_id
         }
-      }).then(res => {
-        this.artist = res.data[0];
-      }).catch(err => {
-        console.error(err);
       })
+          .then(res => {
+            this.artist = res.data[0];
+          })
+          .catch(err => {
+            console.error(err);
+          })
     }
   }
 }
