@@ -19,8 +19,8 @@
           <music-info v-for="(music, index) in musics"
                     v-bind:key="music.id"
                     v-bind:index="index"
-                    v-bind:music="music"
-          ></music-info>
+                    v-bind:music="music">
+          </music-info>
         </md-list>
       </div>
     </div>
