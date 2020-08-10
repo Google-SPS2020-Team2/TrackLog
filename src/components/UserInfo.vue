@@ -12,7 +12,7 @@
       </md-button>
     </div>
     <div class="music_list">
-      <h2 style = "color: rgba(80,80,80,1);">Music list</h2>
+      <h2 style = "color: rgba(80,80,80,1);">Played Music list</h2>
       <md-divider></md-divider>
       <div v-if="musics.length" id="music-list-data">
         <md-list>
@@ -43,7 +43,7 @@ export default {
     }
   },
   created: function () {
-    this.getMusics();
+    this.getPlayedMusics();
   },
   methods: {
     logout() {
@@ -53,8 +53,8 @@ export default {
           this.$router.push('/login');
         });
     },
-    getMusics() {
-      this.$http.get('/show')
+    getPlayedMusics() {
+      this.$http.get('/show_practice')
           .then(res => {
             this.musics = res.data;
             this.loading = false;
