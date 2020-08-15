@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="userLoggedIn">
     <md-app style="min-height: 100vh;">
       <md-app-toolbar class="md-primary">
         <span class="md-title">TrackLog</span>
@@ -15,6 +15,13 @@
       </md-app-content>
     </md-app>
   </div>
+  <div v-else>
+    <md-app style="min-height: 100vh;">
+      <md-app-content>
+        <router-view></router-view>
+      </md-app-content>
+    </md-app>
+  </div>
 </template>
 
 <script>
@@ -23,6 +30,11 @@ export default {
   name: 'App',
   components: {
     'app-drawer': AppDrawer
+  },
+  computed: {
+    userLoggedIn() {
+      return this.$store.getters.userId !== null;
+    }
   }
 }
 </script>

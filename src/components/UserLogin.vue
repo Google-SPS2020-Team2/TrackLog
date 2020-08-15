@@ -1,5 +1,5 @@
 <template>
-  <div id="user-login">
+  <div id="user-login" style="margin: 20vh auto;">
     <h1>Login to TrackLog</h1>
     <md-field>
       <label>Username</label>
