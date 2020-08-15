@@ -26,6 +26,29 @@
     <div v-else id="music-list-empty">
       <p>There is no music to show.</p>
     </div>
+    <md-dialog v-bind:md-active.sync="addPracticeDialogActive">
+      <md-dialog-title>Add Practice for {{ addPracticeMusicName }}</md-dialog-title>
+      <md-dialog-content>
+        <form novalidate class="md-layout">
+          <md-field>
+            <label for="dialog-practice-score">Score</label>
+            <md-input name="dialog-practice-score" id="dialog-practice-score" type="number" v-model="newPractice.score"/>
+          </md-field>
+          <md-field>
+            <label for="dialog-practice-content">Content</label>
+            <md-textarea md-autogrow name="dialog-practice-content" id="dialog-practice-content" v-model="newPractice.content"/>
+          </md-field>
+        </form>
+      </md-dialog-content>
+      <md-dialog-actions style="margin: 1rem;">
+        <button class="md-button" v-on:click="addPracticeDialogActive = false">
+          <md-icon>close</md-icon> &nbsp; <span>Cancel</span>
+        </button>
+        <button class="md-button" v-on:click="doAddPracticeOfMusic">
+          <md-icon>check</md-icon> &nbsp; <span>Submit</span>
+        </button>
+      </md-dialog-actions>
+    </md-dialog>
     <md-dialog v-bind:md-active.sync="addMusicDialogActive">
       <md-dialog-title>Add Music</md-dialog-title>
       <md-dialog-content>
@@ -78,7 +101,9 @@ export default {
       loadingMessage: 'Loading...',
       musics: [],
       addPracticeDialogActive: false,
-      practice: {
+      addPracticeMusicIndex: 0,
+      addPracticeMusicName: '',
+      newPractice: {
         score: 0,
         content: ''
       },
@@ -108,6 +133,36 @@ export default {
             this.loadingMessage = err;
           });
     },
+    addPracticeOfMusic(index) {
+      /**
+       * This method will open a dialog to let user input score and content,
+       * the API request will be made in doAddPracticeOfMusic() method.
+       */
+      this.addPracticeDialogActive = true;
+      this.addPracticeMusicIndex = index;
+      this.addPracticeMusicName = this.musics[index].music_name;
+    },
+    doAddPracticeOfMusic() {
+      this.$http.post('/add_practice', {
+        music_id: this.musics[this.addPracticeMusicIndex].id,
+        score: this.newPractice.score,
+        content: this.newPractice.content
+      })
+          .then(() => {
+            this.addPracticeDialogActive = false;
+            this.$set(this.musics[this.addPracticeMusicIndex], 'played', true);
+          })
+          .catch(err => console.error(err));
+    },
+    deletePracticeOfMusic(index) {
+      this.$http.post('/delete_practice', {
+        music_id: this.musics[index].id,
+      })
+          .then(() => {
+            this.$set(this.musics[index], 'played', false);
+          })
+          .catch(err => console.error(err));
+    },
     addMusic() {
       this.$http.post('/add', this.newMusic)
           .then(() => {
@@ -132,26 +187,6 @@ export default {
           .then(() => {
             this.$delete(this.musics, this.deleteMusicIndex);
             this.deleteMusicDialogActive = false;
-          })
-          .catch(err => console.error(err));
-    },
-    addPracticeOfMusic(index) {
-      this.$http.post('/add_practice', {
-        music_id: this.musics[index].id,
-        score: this.practice.score,
-        content: this.practice.content
-      })
-          .then(() => {
-            this.$set(this.musics[index], 'played', true);
-          })
-          .catch(err => console.error(err));
-    },
-    deletePracticeOfMusic(index) {
-      this.$http.post('/delete_practice', {
-        music_id: this.musics[index].id,
-      })
-          .then(() => {
-            this.$set(this.musics[index], 'played', false);
           })
           .catch(err => console.error(err));
     }
