@@ -6,7 +6,7 @@ from app.data.database.db import get_db
 from app.data.json.encoder import ComplexEncoder as encoder
 import json
 
-bp = Blueprint("practice", __name__)
+bp = Blueprint("practice",__name__,url_prefix='/api')
 
 
 @bp.route("/add_practice",methods=("GET", "POST"))
@@ -31,6 +31,10 @@ def add_practice():
     if error is not None:
         flash(error)
     else:
+        if score is None:
+            score=-1
+        if content is None:
+            content=""
         db = get_db()
         db.execute(
             "INSERT INTO practice (music_id, player_id, score, content) VALUES (?, ?, ? ,?)",

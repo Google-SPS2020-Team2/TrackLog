@@ -6,7 +6,7 @@ from flask import redirect
 from flask import session
 from app.data.database.db import get_db
 
-bp = Blueprint("player", __name__)
+bp = Blueprint("player", __name__,url_prefix='/api')
 
 
 @bp.route('/register', methods=('GET', 'POST'))

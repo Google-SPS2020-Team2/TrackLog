@@ -8,7 +8,7 @@ from flask import session
 from app.data.database.db import get_db
 from app.data.json.encoder import ComplexEncoder as encoder
 
-bp = Blueprint("music", __name__)
+bp = Blueprint("music", __name__,url_prefix='/api')
 
 
 @bp.route("/show")

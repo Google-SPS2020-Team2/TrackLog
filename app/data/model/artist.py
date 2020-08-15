@@ -7,7 +7,7 @@ from flask import redirect
 from app.data.database.db import get_db
 from app.data.json.encoder import ComplexEncoder as encoder
 
-bp = Blueprint("artist", __name__)
+bp = Blueprint("artist", __name__,url_prefix='/api')
 
 @bp.route("/get_artist_info")
 def show():
