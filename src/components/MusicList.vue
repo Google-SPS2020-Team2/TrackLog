@@ -18,9 +18,9 @@
                   v-bind:simple="false"
                   v-bind:index="index"
                   v-bind:music="music"
-                  v-on:delete="deleteMusic"
-                  v-on:play="playMusic"
-                  v-on:restore="restoreMusic">
+                  v-on:delete="deleteMusic(index)"
+                  v-on:addPractice="addPracticeOfMusic(index)"
+                  v-on:deletePractice="deletePracticeOfMusic(index)">
       </music-info>
     </div>
     <div v-else id="music-list-empty">
@@ -77,6 +77,11 @@ export default {
       loading: true,
       loadingMessage: 'Loading...',
       musics: [],
+      addPracticeDialogActive: false,
+      practice: {
+        score: 0,
+        content: ''
+      },
       addMusicDialogActive: false,
       newMusic: {
         music_name: '',
@@ -130,22 +135,20 @@ export default {
           })
           .catch(err => console.error(err));
     },
-    playMusic(index) {
+    addPracticeOfMusic(index) {
       this.$http.post('/add_practice', {
         music_id: this.musics[index].id,
-        player_id: 0, // TODO: use real user ID
-        score: 0,
-        content: ''
+        score: this.practice.score,
+        content: this.practice.content
       })
           .then(() => {
             this.$set(this.musics[index], 'played', true);
           })
           .catch(err => console.error(err));
     },
-    restoreMusic(index) {
+    deletePracticeOfMusic(index) {
       this.$http.post('/delete_practice', {
         music_id: this.musics[index].id,
-        player_id: 0, // TODO: use real user ID
       })
           .then(() => {
             this.$set(this.musics[index], 'played', false);

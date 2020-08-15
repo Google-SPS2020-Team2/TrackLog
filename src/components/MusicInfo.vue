@@ -20,12 +20,12 @@
         </button>
         <button class="md-button"
                 v-if="!music.played"
-                v-on:click="$emit('play', index)">
-          <md-icon>play_circle_filled</md-icon> &nbsp; <span>Play</span>
+                v-on:click="$emit('addPractice', index)">
+          <md-icon>play_circle_filled</md-icon> &nbsp; <span>Add Practice</span>
         </button>
         <button class="md-button" v-else
-                v-on:click="$emit('restore', index)">
-          <md-icon>restore</md-icon> &nbsp; <span>Restore</span>
+                v-on:click="$emit('deletePractice', index)">
+          <md-icon>restore</md-icon> &nbsp; <span>Delete Practice</span>
         </button>
       </md-card-actions>
     </md-card>
