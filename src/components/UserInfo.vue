@@ -4,8 +4,8 @@
   <div style="position: absolute;">
     <div class="info">
       <img class="avatar" :src="imgsrc">
-      <p class = "nickname">nickname</p>
-      <p class = "name">name</p>
+      <p class = "nickname">{{nickname}}</p>
+      <p class = "name">{{username}}</p>
       <md-button class="md-accent" style="width: 95%;"
                  v-on:click="logout()">
         Logout
@@ -39,11 +39,14 @@ export default {
   data: function() {
     return {
       imgsrc:avatar,
-      musics: []
+      musics: [],
+      username: " ",
+      nickname: " "
     }
   },
   created: function () {
     this.getPlayedMusics();
+    this.getUserInfo();
   },
   methods: {
     logout() {
@@ -57,11 +60,13 @@ export default {
       this.$http.get('/show_practice')
           .then(res => {
             this.musics = res.data;
-            this.loading = false;
-          })
-          .catch(err => {
-            console.error(err);
-            this.loadingMessage = err;
+          });
+    },
+    getUserInfo() {
+      this.$http.get('/status')
+          .then(res => {
+            this.username = res.data.username;
+            this.nickname = res.data.nickname;
           });
     }
   }
