@@ -9,6 +9,7 @@ from app.data.json.encoder import ComplexEncoder as encoder
 
 bp = Blueprint("artist", __name__,url_prefix='/api')
 
+
 @bp.route("/get_artist_info")
 def show():
     error=None
@@ -26,10 +27,11 @@ def show():
         my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
         return json.dumps(my_query, cls=encoder,ensure_ascii=False)
 
+
 @bp.route("/show_artist")
 def show_artist():
     cur = (get_db().cursor().execute(
-        "select artist_name from artist"
+        "select id, artist_name from artist"
     ))
     my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
     return json.dumps(my_query, ensure_ascii=False, cls=encoder)

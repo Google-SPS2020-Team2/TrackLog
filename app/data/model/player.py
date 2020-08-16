@@ -1,10 +1,12 @@
 from flask import Blueprint
+import json
 from flask import request
 from flask import flash
 from flask import url_for
 from flask import redirect
 from flask import session
 from app.data.database.db import get_db
+from app.data.json.encoder import ComplexEncoder as encoder
 
 bp = Blueprint("player", __name__,url_prefix='/api')
 
@@ -91,6 +93,22 @@ def login():
 
         flash(error)
         return error  # TODO change the url
+
+
+@bp.route('/status')
+def status():
+    db = get_db()
+    error = None
+    if session['user_id'] is None:
+        error = "Not log in"
+    if error is None:
+        user = db.execute(
+            'SELECT * FROM user WHERE id = ?', (session['user_id'],)
+        ).fetchone()
+        res = {'username': user['username'], 'nickname': user['nickname']}
+        return json.dumps(res, ensure_ascii=False, cls=encoder)
+    flash(error)
+    return error  # TODO change the url
 
 
 @bp.route('/logout')
