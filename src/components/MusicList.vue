@@ -49,6 +49,7 @@
         </button>
       </md-dialog-actions>
     </md-dialog>
+
     <md-dialog v-bind:md-active.sync="addMusicDialogActive">
       <md-dialog-title>Add Music</md-dialog-title>
       <md-dialog-content>
@@ -57,10 +58,24 @@
             <label for="dialog-music-name">Music Name</label>
             <md-input name="dialog-music-name" id="dialog-music-name" v-model="newMusic.music_name"/>
           </md-field>
-          <md-field>
-            <label for="dialog-artist-id">Artist ID</label>
-            <md-input name="dialog-artist-id" id="dialog-artist-id" type="number" v-model="newMusic.artist_id"/>
-          </md-field>
+          <div class="md-layout md-gutter">
+            <div class="md-layout-item">
+              <md-field>
+                <label for="dialog-artist">Artist</label>
+                <md-select name="dialog-artist" id="dialog-artist"  v-model="newMusic.artist_id">
+                  <md-option
+                    v-for="(artist, index) in artists"
+                    v-bind:key="artist.id"
+                    v-bind:index="index"
+                    v-bind:artist="artist"
+                    :value=parseInt(artist.id)>
+                    {{artist.artist_name}}
+                  </md-option>
+                </md-select>
+              </md-field>
+            </div>
+            <button class="md-button" style="margin: 1rem;" v-on:click="addArtistDialogActive = true">add artist</button>
+          </div>
           <md-field>
             <label for="dialog-difficulty">Difficulty</label>
             <md-input name="dialog-difficulty" id="dialog-difficulty" v-model="newMusic.difficulty"/>
@@ -76,6 +91,31 @@
         </button>
       </md-dialog-actions>
     </md-dialog>
+
+    <md-dialog v-bind:md-active.sync="addArtistDialogActive">
+      <md-dialog-title>Add Artist</md-dialog-title>
+      <md-dialog-content>
+        <form>
+          <md-field>
+            <label for="dialog-artist-name">Artist Name</label>
+            <md-input name="dialog-artist-name" id="dialog-artist-name" v-model="newArtist.name"/>
+          </md-field>
+          <md-field>
+            <label for="dialog-introduction">Introduction</label>
+            <md-input name="dialog-introduction" id="dialog-introduction" v-model="newArtist.introduction"/>
+          </md-field>
+        </form>
+      </md-dialog-content>
+      <md-dialog-actions style="margin: 1rem;">
+        <button class="md-button" v-on:click="addArtistDialogActive = false">
+          <md-icon>close</md-icon> &nbsp; <span>Cancel</span>
+        </button>
+        <button class="md-button" v-on:click="addArtist">
+          <md-icon>check</md-icon> &nbsp; <span>Submit</span>
+        </button>
+      </md-dialog-actions>
+    </md-dialog>
+
     <md-dialog-confirm
       md-title="Delete Music?"
       v-bind:md-content="'Are you sure you want to delete music ' + deleteMusicName + '?'"
@@ -90,16 +130,18 @@
 <script>
 import MusicInfo from "@/components/MusicInfo";
 
+
 export default {
   name: "MusicList",
   components: {
-    'music-info': MusicInfo
+    'music-info': MusicInfo,
   },
   data: function () {
     return {
       loading: true,
       loadingMessage: 'Loading...',
       musics: [],
+      artists: [],
       addPracticeDialogActive: false,
       addPracticeMusicIndex: 0,
       addPracticeMusicName: '',
@@ -113,6 +155,11 @@ export default {
         artist_id: 0,
         difficulty: ''
       },
+      addArtistDialogActive: false,
+      newArtist: {
+        name: '',
+        introduction: ''
+      },
       deleteMusicDialogActive: false,
       deleteMusicIndex: 0,
       deleteMusicName: ''
@@ -120,6 +167,7 @@ export default {
   },
   created: function () {
     this.getMusics();
+    this.getArtists();
   },
   methods: {
     getMusics() {
@@ -187,6 +235,21 @@ export default {
           .then(() => {
             this.$delete(this.musics, this.deleteMusicIndex);
             this.deleteMusicDialogActive = false;
+          })
+          .catch(err => console.error(err));
+    },
+    getArtists() {
+      this.$http.get('/show_artist')
+          .then(res => {
+            this.artists = res.data;
+          })
+          .catch(err => console.error(err));
+    },
+    addArtist() {
+      this.$http.post('/add_artist', this.newArtist)
+          .then(() => {
+            this.getArtists();
+            this.addArtistDialogActive = false;
           })
           .catch(err => console.error(err));
     }
