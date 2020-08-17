@@ -7,13 +7,13 @@
     <h2 style="margin-bottom: 2rem;">
       Played Music List
     </h2>
-    <div v-if="musics.length" id="music-list-data">
-      <music-info v-for="(music, index) in musics"
+    <div class="md-layout md-gutter" :class="`md-alignment-top`" v-if="musics.length" id="music-list-data">
+      <practice-info v-for="(music, index) in musics"
                   v-bind:key="music.id"
                   v-bind:simple="true"
                   v-bind:index="index"
                   v-bind:music="music">
-      </music-info>
+      </practice-info>
     </div>
     <div v-else id="music-list-empty">
       <p>There is no music to show.</p>
@@ -22,12 +22,12 @@
 </template>
 
 <script>
-import MusicInfo from "@/components/MusicInfo";
+import PracticeInfo from "@/components/PracticeInfo";
 
 export default {
   name: "PlayedList",
   components: {
-    'music-info': MusicInfo
+    'practice-info': PracticeInfo
   },
   data: function () {
     return {
