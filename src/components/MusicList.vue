@@ -58,7 +58,7 @@
             <label for="dialog-music-name">Music Name</label>
             <md-input name="dialog-music-name" id="dialog-music-name" v-model="newMusic.music_name"/>
           </md-field>
-          <div class="md-layout md-gutter">
+          <div class="md-layout md-gutter"> 
             <div class="md-layout-item">
               <md-field>
                 <label for="dialog-artist">Artist</label>
@@ -74,7 +74,7 @@
                 </md-select>
               </md-field>
             </div>
-            <button class="md-button" style="margin: 1rem;" v-on:click="addArtistDialogActive = true">add artist</button>
+            <md-button style="margin: 1rem;" v-on:click="addArtistDialogActive = true">add artist</md-button>
           </div>
           <md-field>
             <label for="dialog-difficulty">Difficulty</label>
