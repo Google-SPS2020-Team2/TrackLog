@@ -61,8 +61,9 @@ def delete_practice():
 
 @bp.route("/show_practice")
 def show():
+    session['user_id']=1
     cur = (get_db().cursor().execute(
-        "select music.id,music.created,music.music_name,music.artist_id,music.difficulty\
+        "select music.id,music.created,music.music_name,music.artist_id,music.difficulty,practice.content,practice.score\
         from music,practice\
         where music.id=practice.music_id \
         and practice.player_id="+str(session['user_id'])
