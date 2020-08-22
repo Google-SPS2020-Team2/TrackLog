@@ -176,7 +176,8 @@ export default {
   computed: {
     filteredMusics() {
       if (this.keyword) {
-        return this.musics.filter(m => m.music_name.indexOf(this.keyword) >= 0);
+        const keywordToLowerCase = this.keyword.toLowerCase();
+        return this.musics.filter(m => m.music_name.toLowerCase().indexOf(keywordToLowerCase) >= 0);
       } else {
         // No keyword given, return all musics.
         return this.musics;
