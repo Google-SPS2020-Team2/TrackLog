@@ -7,8 +7,15 @@
     <h2 style="margin-bottom: 2rem;">
       Played Music List
     </h2>
+    <div id="music-search-input">
+      <md-field>
+        <md-icon>search</md-icon>
+        <label>Search Music</label>
+        <md-input v-model="keyword"></md-input>
+      </md-field>
+    </div>
     <div class="md-layout md-gutter" :class="`md-alignment-top`" v-if="musics.length" id="music-list-data">
-      <practice-info v-for="(music, index) in musics"
+      <practice-info v-for="(music, index) in filteredMusics"
                   v-bind:key="music.id"
                   v-bind:simple="true"
                   v-bind:index="index"
@@ -33,7 +40,18 @@ export default {
     return {
       loading: true,
       loadingMessage: 'Loading...',
+      keyword: '',
       musics: []
+    }
+  },
+  computed: {
+    filteredMusics() {
+      if (this.keyword) {
+        return this.musics.filter(m => m.music_name.indexOf(this.keyword) >= 0);
+      } else {
+        // No keyword given, return all musics.
+        return this.musics;
+      }
     }
   },
   created: function () {

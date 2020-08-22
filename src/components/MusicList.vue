@@ -12,8 +12,15 @@
         <md-icon>add_box</md-icon> &nbsp; <span>Add Music</span>
       </button>
     </h2>
+    <div id="music-search-input">
+      <md-field>
+        <md-icon>search</md-icon>
+        <label>Search Music</label>
+        <md-input v-model="keyword"></md-input>
+      </md-field>
+    </div>
     <div v-if="musics.length" id="music-list-data">
-      <music-info v-for="(music, index) in musics"
+      <music-info v-for="(music, index) in filteredMusics"
                   v-bind:key="music.id"
                   v-bind:simple="false"
                   v-bind:index="index"
@@ -140,6 +147,7 @@ export default {
     return {
       loading: true,
       loadingMessage: 'Loading...',
+      keyword: '',
       musics: [],
       artists: [],
       addPracticeDialogActive: false,
@@ -163,6 +171,16 @@ export default {
       deleteMusicDialogActive: false,
       deleteMusicIndex: 0,
       deleteMusicName: ''
+    }
+  },
+  computed: {
+    filteredMusics() {
+      if (this.keyword) {
+        return this.musics.filter(m => m.music_name.indexOf(this.keyword) >= 0);
+      } else {
+        // No keyword given, return all musics.
+        return this.musics;
+      }
     }
   },
   created: function () {
