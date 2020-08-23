@@ -22,6 +22,19 @@
                     v-bind:music="music">
           </music-info>
         </md-list>
+        <div id="musics-pagination" style="text-align: center;">
+          <md-button style="float: left;"
+                     v-bind:disabled="pageIndex <= 1"
+                     v-on:click="showPrevPage()">
+            Previous Page
+          </md-button>
+          <md-button disabled>{{ (pageIndex - 1) * pageSize + 1 }} - {{ pageIndex * pageSize }} of {{ totalItems }}</md-button>
+          <md-button style="float: right;"
+                     v-bind:disabled="pageIndex >= totalPages"
+                     v-on:click="showNextPage()">
+            Next Page
+          </md-button>
+        </div>
       </div>
     </div>
   </div>
@@ -39,9 +52,22 @@ export default {
   data: function() {
     return {
       imgsrc:avatar,
+      pageSize: 0,
+      totalItems: 0,
+      totalPages: 0,
       musics: [],
       username: " ",
       nickname: " "
+    }
+  },
+  computed: {
+    pageIndex() {
+      return Number(this.$route.query.page) || 1;
+    }
+  },
+  watch: {
+    pageIndex() {
+      this.getPlayedMusics();
     }
   },
   created: function () {
@@ -57,10 +83,23 @@ export default {
         });
     },
     getPlayedMusics() {
-      this.$http.get('/show_practice')
+      this.$http.get('/show_practice', {
+        params: {
+          page: this.pageIndex
+        }
+      })
           .then(res => {
-            this.musics = res.data;
+            this.musics = res.data.items;
+            this.pageSize = res.data.pageSize;
+            this.totalItems = res.data.totalItems;
+            this.totalPages = res.data.totalPages;
           });
+    },
+    showPrevPage() {
+      this.$router.push({path: '/user', query: {page: (this.pageIndex - 1).toString()}});
+    },
+    showNextPage() {
+      this.$router.push({path: '/user', query: {page: (this.pageIndex + 1).toString()}});
     },
     getUserInfo() {
       this.$http.get('/status')

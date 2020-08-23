@@ -29,6 +29,19 @@
                   v-on:addPractice="addPracticeOfMusic(index)"
                   v-on:deletePractice="deletePracticeOfMusic(index)">
       </music-info>
+      <div id="musics-pagination" style="text-align: center;">
+        <md-button style="float: left;"
+                   v-bind:disabled="pageIndex <= 1"
+                   v-on:click="showPrevPage()">
+          Previous Page
+        </md-button>
+        <md-button disabled>{{ (pageIndex - 1) * pageSize + 1 }} - {{ pageIndex * pageSize }} of {{ totalItems }}</md-button>
+        <md-button style="float: right;"
+                   v-bind:disabled="pageIndex >= totalPages"
+                   v-on:click="showNextPage()">
+          Next Page
+        </md-button>
+      </div>
     </div>
     <div v-else id="music-list-empty">
       <p>There is no music to show.</p>
@@ -148,6 +161,9 @@ export default {
       loading: true,
       loadingMessage: 'Loading...',
       keyword: '',
+      pageSize: 0,
+      totalItems: 0,
+      totalPages: 1,
       musics: [],
       artists: [],
       addPracticeDialogActive: false,
@@ -174,6 +190,9 @@ export default {
     }
   },
   computed: {
+    pageIndex() {
+      return Number(this.$route.query.page) || 1;
+    },
     filteredMusics() {
       if (this.keyword) {
         const keywordToLowerCase = this.keyword.toLowerCase();
@@ -184,21 +203,39 @@ export default {
       }
     }
   },
+  watch: {
+    pageIndex() {
+      this.getMusics();
+    }
+  },
   created: function () {
     this.getMusics();
     this.getArtists();
   },
   methods: {
     getMusics() {
-      this.$http.get('/show')
+      this.$http.get('/show', {
+        params: {
+          page: this.pageIndex
+        }
+      })
           .then(res => {
-            this.musics = res.data;
+            this.musics = res.data.items;
+            this.pageSize = res.data.pageSize;
+            this.totalItems = res.data.totalItems;
+            this.totalPages = res.data.totalPages;
             this.loading = false;
           })
           .catch(err => {
             console.error(err);
             this.loadingMessage = err;
           });
+    },
+    showPrevPage() {
+      this.$router.push({path: '/music', query: {page: (this.pageIndex - 1).toString()}});
+    },
+    showNextPage() {
+      this.$router.push({path: '/music', query: {page: (this.pageIndex + 1).toString()}});
     },
     addPracticeOfMusic(index) {
       /**
