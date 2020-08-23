@@ -33,6 +33,7 @@ def show():
 
     if total_items == 0:
         page_index = 0
+        page_size = 0
 
     cur = (get_db().cursor().execute(
         "select id,created,music_name,artist_id,difficulty from music limit ? offset ?", (page_size, (page_index - 1) * page_max_size))

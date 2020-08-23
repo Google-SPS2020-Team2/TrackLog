@@ -21,7 +21,7 @@ def add_practice():
         content = jsonData["content"]
     else: # for test
         music_id=6
-        player_id=0
+        player_id=1
         score=0
         content="miao"
 
@@ -53,7 +53,7 @@ def delete_practice():
         player_id = session['user_id']
     else:  # just for test
         music_id=6
-        player_id=0
+        player_id=1
     db = get_db()
     db.execute("DELETE FROM practice WHERE music_id = ? and player_id=? ", (music_id,player_id))
     db.commit()
@@ -62,14 +62,43 @@ def delete_practice():
 
 @bp.route("/show_practice")
 def show():
+    jsonData = request.get_json()
+    page_index = 1
+    page_max_size = 20
+    page_size = 20
+
+    if (jsonData is not None) and ("page" in jsonData):
+        page_index = int(jsonData["page"])
+
+    if (jsonData is not None) and ("size" in jsonData):
+        page_max_size = int(jsonData["size"])
+
+    cur = get_db().cursor().execute(
+        "select count(*) as total_items from music,practice\
+        where music.id=practice.music_id \
+        and practice.player_id="+str(session['user_id'])).fetchone()
+
+    total_items = int(cur["total_items"])
+    total_pages = int(total_items / page_max_size)
+    if total_items % page_max_size > 0:
+        total_pages += 1
+        if page_index == total_pages:
+            page_size = total_items % page_max_size
+
+    if total_items == 0:
+        page_index = 0
+        page_size = 0
+
     cur = (get_db().cursor().execute(
         "select music.id,music.created,music.music_name,music.artist_id,music.difficulty,practice.content,practice.score\
         from music,practice\
         where music.id=practice.music_id \
-        and practice.player_id="+str(session['user_id'])
+        and practice.player_id="+str(session['user_id']) + " limit ? offset ? ", (page_size, (page_index - 1) * page_max_size)
     ))
     my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-    return json.dumps(my_query, cls=encoder)
+    res = {'pageIndex': page_index, 'pageSize': page_size, 'totalItems': total_items, 'totalPages': total_pages,
+           'items': my_query}
+    return json.dumps(res, cls=encoder)
 
 
 class Practice(object):

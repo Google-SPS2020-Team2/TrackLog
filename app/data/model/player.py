@@ -161,13 +161,40 @@ def delete_favourite():
 
 @bp.route("/show_favourite")
 def show_favourite():
+    jsonData = request.get_json()
+    page_index = 1
+    page_max_size = 20
+    page_size = 20
+
+
+    if (jsonData is not None) and ("page" in jsonData):
+        page_index = int(jsonData["page"])
+
+    if (jsonData is not None) and ("size" in jsonData):
+        page_max_size = int(jsonData["size"])
+
+    cur = get_db().cursor().execute("select count(*) as total_items from music where id in (select music_id from favourite where user_id = " + str(session['user_id']) + ")").fetchone()
+    total_items = int(cur["total_items"])
+    total_pages = int(total_items / page_max_size)
+    if total_items % page_max_size > 0:
+        total_pages += 1
+        if page_index == total_pages:
+            page_size = total_items % page_max_size
+
+    if total_items == 0:
+        page_index = 0
+        page_size = 0
+
+
     cur = (get_db().cursor().execute(
         "select id,created,music_name,artist_id,difficulty,\
         (case when id in (select music_id from practice where player_id="+str(session['user_id']) +
-        ") then 1 else 0 end) as played from music where id in (select music_id from favourite where user_id = " + str(session['user_id']) + ")"
+        ") then 1 else 0 end) as played from music where id in (select music_id from favourite where user_id = " + str(session['user_id']) + ") limit ? offset ? ", (page_size, (page_index - 1) * page_max_size)
     ))
     my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-    return json.dumps(my_query, cls=encoder)
+    res = {'pageIndex': page_index, 'pageSize': page_size, 'totalItems': total_items, 'totalPages': total_pages,
+           'items': my_query}
+    return json.dumps(res, cls=encoder)
 
 
 class Player(object):
