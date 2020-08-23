@@ -62,7 +62,7 @@ export default {
       })
           .then(() => {
             this.$store.commit('userLogin', this.username);
-            this.$router.push({path: '/'});
+            this.$router.push({path: '/music'});
           })
           .catch(err => {
             console.error(err);
