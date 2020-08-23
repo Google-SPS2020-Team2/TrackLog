@@ -94,6 +94,22 @@ def delete():
 
     return redirect(url_for("hello"))  # TODO change the url
 
+@bp.route("/getCommentAndScore")
+def getCommentAndScore():
+    error = None
+    id = request.args.get("musicId")
+    if not id:
+        error = "Music ID is required."
+    if error is not None:
+        flash(error)
+    else:
+        cur = (get_db().cursor().execute(
+            "select music_id,player_id,score,content\
+            from practice\
+            where music_id=" + str(id)
+        ))
+        my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+        return json.dumps(my_query, cls=encoder, ensure_ascii=False)
 
 class Music(object):
     def __init__(self, music_name, duration, artist_id, difficulty):
