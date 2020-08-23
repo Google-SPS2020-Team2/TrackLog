@@ -59,9 +59,9 @@ def delete_practice():
     db.commit()
     return "Delete success!"
 
+
 @bp.route("/show_practice")
 def show():
-    session['user_id']=1
     cur = (get_db().cursor().execute(
         "select music.id,music.created,music.music_name,music.artist_id,music.difficulty,practice.content,practice.score\
         from music,practice\
@@ -70,6 +70,7 @@ def show():
     ))
     my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
     return json.dumps(my_query, cls=encoder)
+
 
 class Practice(object):
     def __init__(self, practice_id, music_id, player_id, score, content):

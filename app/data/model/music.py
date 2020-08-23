@@ -4,7 +4,6 @@ from flask import request
 from flask import flash
 from flask import url_for
 from flask import redirect
-from flask import session
 from app.data.database.db import get_db
 from app.data.json.encoder import ComplexEncoder as encoder
 
@@ -13,23 +12,41 @@ bp = Blueprint("music", __name__,url_prefix='/api')
 
 @bp.route("/show")
 def show():
+    jsonData = request.get_json()
+    page_index = 1
+    page_max_size = 20
+    page_size = 20
+
+    if (jsonData is not None) and ("page" in jsonData):
+        page_index = int(jsonData["page"])
+
+    if (jsonData is not None) and ("size" in jsonData):
+        page_max_size = int(jsonData["size"])
+
+    cur = get_db().cursor().execute("select count(*) as total_items from music").fetchone()
+    total_items = int(cur["total_items"])
+    total_pages = int(total_items / page_max_size)
+    if total_items % page_max_size > 0:
+        total_pages += 1
+        if page_index == total_pages:
+            page_size = total_items % page_max_size
+
+    if total_items == 0:
+        page_index = 0
+
     cur = (get_db().cursor().execute(
-        "select id,created,music_name,artist_id,difficulty,\
-        (case when id in (select music_id from practice where player_id="+str(session['user_id'])+
-        ") then 1\
-        else 0\
-        end) as played \
-        from music"
-    ))
+        "select id,created,music_name,artist_id,difficulty from music limit ? offset ?", (page_size, (page_index - 1) * page_max_size))
+    )
     my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-    return json.dumps(my_query, cls=encoder)
+    res = {'pageIndex': page_index, 'pageSize': page_size, 'totalItems': total_items, 'totalPages': total_pages, 'items': my_query}
+    return json.dumps(res, cls=encoder)
 
 
 @bp.route("/add", methods=("GET", "POST"))
 def add():
     """Create a new post for the current user."""
     if request.method == "POST":
-        jsonData=request.get_json()
+        jsonData = request.get_json()
         music_name = jsonData["music_name"]
         artist_id = jsonData["artist_id"]
         difficulty = jsonData["difficulty"]

@@ -117,6 +117,59 @@ def logout():
     return redirect(url_for('hello'))  # TODO change the url
 
 
+@bp.route("/add_favourite",methods=("GET", "POST"))
+def add_favourite():
+    error = None
+    if request.method == "POST":
+        jsonData=request.get_json()
+        music_id = jsonData["music_id"]
+        user_id = session['user_id']
+    else: # for test
+        music_id = 6
+        user_id = 1
+
+    if not music_id:
+        error = "Music ID is required."
+
+    if not user_id:
+        error = "User ID is required."
+
+    if error is not None:
+        flash(error)
+    else:
+        db = get_db()
+        db.execute(
+            "INSERT INTO favourite (user_id, music_id) VALUES (? ,?)", (user_id, music_id),)
+        db.commit()
+    return "Add success!"
+
+
+@bp.route("/delete_favourite", methods=("GET", "POST"))
+def delete_favourite():
+    if request.method == "POST":
+        jsonData = request.get_json()
+        music_id = jsonData["music_id"]
+        user_id = session['user_id']
+    else:  # just for test
+        music_id = 6
+        user_id = 1
+    db = get_db()
+    db.execute("DELETE FROM favourite WHERE music_id = ? and user_id = ? ", (music_id, user_id))
+    db.commit()
+    return "Delete success!"
+
+
+@bp.route("/show_favourite")
+def show_favourite():
+    cur = (get_db().cursor().execute(
+        "select id,created,music_name,artist_id,difficulty,\
+        (case when id in (select music_id from practice where player_id="+str(session['user_id']) +
+        ") then 1 else 0 end) as played from music where id in (select music_id from favourite where user_id = " + str(session['user_id']) + ")"
+    ))
+    my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+    return json.dumps(my_query, cls=encoder)
+
+
 class Player(object):
     def __init__(self, player_id, name, nickname, password):
         self.player_id = player_id
