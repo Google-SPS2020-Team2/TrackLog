@@ -161,17 +161,15 @@ def delete_favourite():
 
 @bp.route("/show_favourite")
 def show_favourite():
-    jsonData = request.get_json()
     page_index = 1
     page_max_size = 20
     page_size = 20
 
+    if "page" in request.args:
+        page_index = int(request.args["page"])
 
-    if (jsonData is not None) and ("page" in jsonData):
-        page_index = int(jsonData["page"])
-
-    if (jsonData is not None) and ("size" in jsonData):
-        page_max_size = int(jsonData["size"])
+    if "size" in request.args:
+        page_max_size = int(request.args["size"])
 
     cur = get_db().cursor().execute("select count(*) as total_items from music where id in (select music_id from favourite where user_id = " + str(session['user_id']) + ")").fetchone()
     total_items = int(cur["total_items"])

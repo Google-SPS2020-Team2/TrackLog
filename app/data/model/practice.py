@@ -62,16 +62,15 @@ def delete_practice():
 
 @bp.route("/show_practice")
 def show():
-    jsonData = request.get_json()
     page_index = 1
     page_max_size = 20
     page_size = 20
 
-    if (jsonData is not None) and ("page" in jsonData):
-        page_index = int(jsonData["page"])
+    if "page" in request.args:
+        page_index = int(request.args["page"])
 
-    if (jsonData is not None) and ("size" in jsonData):
-        page_max_size = int(jsonData["size"])
+    if "size" in request.args:
+        page_max_size = int(request.args["size"])
 
     cur = get_db().cursor().execute(
         "select count(*) as total_items from music,practice\
