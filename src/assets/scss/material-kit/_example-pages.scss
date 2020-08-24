@@ -36,6 +36,26 @@
 .section{
   padding: 70px 0;
 }
+
+.list-page{
+    .page-header{
+        height: 380px;
+        background-position: center center;
+
+        &::before {
+            background: rgba(0,0,0, .2);
+          }
+    }
+
+    .title {
+        text-align: center;
+    }
+
+    .description {
+        text-align: center;
+    }
+}
+
 .profile-page{
     .page-header{
         height: 380px;

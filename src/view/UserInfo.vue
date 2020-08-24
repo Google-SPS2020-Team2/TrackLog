@@ -31,7 +31,12 @@
               and records all of his own music, giving it a warm, intimate feel
               with a solid groove structure.
             </p>
+            <md-button class="md-primary"
+                      v-on:click="logout()">
+              Logout
+            </md-button>
           </div>
+
           <div class="music_list">
             <h2 class = "played-music text-center title">Played Music list</h2>
             <md-divider></md-divider>

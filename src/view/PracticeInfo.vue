@@ -1,10 +1,13 @@
 <template>
   <div v-bind:id="'music-' + music.id " style="margin-bottom: 1rem;">
     <md-card class="practice-card">
-      <md-card-header>
+      <!-- <md-card-header>
         <span class="md-title">{{ music.music_name }}</span>
-      </md-card-header>
+      </md-card-header> -->
       <md-card-content>
+        <div class="card-header">
+          <h3>{{ music.music_name }}</h3>
+        </div>
         <div v-if="artist === null">
           Loading artist info...
         </div>
@@ -50,13 +53,4 @@ export default {
 </script>
 
 <style scoped>
-
-.content {
-  font-size: 20px; 
-  color: rgba(80,80,80,1);
-}
-.practice-card {
-    width: 400px;
-}
-
 </style>

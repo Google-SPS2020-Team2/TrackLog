@@ -1,10 +1,13 @@
 <template>
   <div v-bind:id="'music-' + music.id " style="margin-bottom: 1rem;">
     <md-card>
-      <md-card-header>
+      <!-- <md-card-header>
         <span class="md-title">{{ music.music_name }}</span>
-      </md-card-header>
+      </md-card-header> -->
       <md-card-content>
+        <div class="card-header">
+          <h3>{{ music.music_name }}</h3>
+        </div>
         <div v-if="artist === null">
           Loading artist info...
         </div>
@@ -14,19 +17,19 @@
         </div>
       </md-card-content>
       <md-card-actions v-if="!simple">
-        <button class="md-button"
+        <md-button class="button md-success md-round"
                 v-on:click="$emit('delete', index)">
-          <md-icon>delete</md-icon> &nbsp; <span>Delete</span>
-        </button>
-        <button class="md-button"
+          <md-icon >delete</md-icon> Delete
+        </md-button>
+        <md-button class="button md-success md-round"
                 v-if="!music.played"
                 v-on:click="$emit('addPractice', index)">
-          <md-icon>play_circle_filled</md-icon> &nbsp; <span>Add Practice</span>
-        </button>
-        <button class="md-button" v-else
+          <md-icon>play_circle_filled</md-icon>Add Practice
+        </md-button>
+        <md-button class="button md-success md-round" v-else
                 v-on:click="$emit('deletePractice', index)">
-          <md-icon>restore</md-icon> &nbsp; <span>Delete Practice</span>
-        </button>
+          <md-icon>restore</md-icon>Delete Practice
+        </md-button>
       </md-card-actions>
     </md-card>
   </div>
@@ -63,5 +66,7 @@ export default {
 </script>
 
 <style scoped>
-
+.button {
+    margin: 0 2px 15px;
+}
 </style>
