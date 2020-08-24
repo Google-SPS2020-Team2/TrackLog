@@ -9,7 +9,7 @@
           <div class="md-layout-item">
             <h1 class="title text-center">Comments</h1>
             <h3 class="description text-center">
-              {{this.$route.params.name}}
+              Share your story
             </h3>
           </div>
         </div>
@@ -19,6 +19,8 @@
       <div class="section profile-content">
         <div class="container">
           <div class="comment_list">
+            <h2 class = "comments text-center title">{{this.$route.params.name}}</h2>
+            <md-divider></md-divider>
             <div v-if="comments.length" id="comment-list-data">
               <md-list>
                 <comment-info v-for="(comment, index) in comments"
@@ -26,7 +28,6 @@
                             v-bind:index="index"
                             v-bind:comment="comment"
                             >
-                            <p>{{comment.content}}</p>
                 </comment-info>
               </md-list>
             </div>
@@ -84,7 +85,7 @@ export default {
             }
         })
             .then(res => {
-                this.comments=res.data.items;
+                this.comments=res.data;
                 this.loading = false;
             })
             .catch(err => {
