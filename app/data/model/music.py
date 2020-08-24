@@ -1,6 +1,7 @@
 # -*- coding:utf-8 -*-
 from flask import Blueprint
 import json
+from flask import session
 from flask import request
 from flask import flash
 from flask import url_for
@@ -36,10 +37,13 @@ def show():
         page_size = 0
 
     cur = (get_db().cursor().execute(
-        "select id,created,music_name,artist_id,difficulty from music limit ? offset ?", (page_size, (page_index - 1) * page_max_size))
+        "select id,created,music_name,artist_id,difficulty,(case when id in (select music_id from practice where player_id=" + str(
+            session['user_id']) + ") then 1 else 0 end) as played from music limit ? offset ?",
+        (page_size, (page_index - 1) * page_max_size))
     )
     my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
-    res = {'pageIndex': page_index, 'pageSize': page_size, 'totalItems': total_items, 'totalPages': total_pages, 'items': my_query}
+    res = {'pageIndex': page_index, 'pageSize': page_size, 'totalItems': total_items, 'totalPages': total_pages,
+           'items': my_query}
     return json.dumps(res, cls=encoder, ensure_ascii=False)
 
 
