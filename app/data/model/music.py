@@ -1,3 +1,4 @@
+# -*- coding:utf-8 -*-
 from flask import Blueprint
 import json
 from flask import request
@@ -39,7 +40,7 @@ def show():
     )
     my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
     res = {'pageIndex': page_index, 'pageSize': page_size, 'totalItems': total_items, 'totalPages': total_pages, 'items': my_query}
-    return json.dumps(res, cls=encoder)
+    return json.dumps(res, cls=encoder, ensure_ascii=False)
 
 
 @bp.route("/add", methods=("GET", "POST"))
