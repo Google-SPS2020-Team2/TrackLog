@@ -6,6 +6,7 @@ import MusicList from '@/view/MusicList';
 import PlayedList from '@/view/PlayedList';
 import UserInfo from '@/view/UserInfo';
 import UserLogin from '@/view/UserLogin.vue';
+import MusicDetail from '@/view/MusicDetail.vue';
 
 import MainNavbar from "./layout/MainNavbar.vue";
 import MainFooter from "./layout/MainFooter.vue";
@@ -50,6 +51,11 @@ const router = new Router({
         header: { colorOnScroll: 200 },
         footer: { backgroundColor: "black" }
       }
+    },
+    {
+      path: '/music/:id',
+      name: 'MusicDetail',
+      components: {default: MusicDetail, header: MainNavbar, footer: MainFooter},
     }
   ],
   scrollBehavior: to => {

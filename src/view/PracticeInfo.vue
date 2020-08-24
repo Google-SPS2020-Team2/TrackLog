@@ -1,6 +1,6 @@
 <template>
   <div v-bind:id="'music-' + music.id " style="margin-bottom: 1rem;">
-    <md-card class="practice-card">
+    <md-card md-with-hover class="practice-card">
       <!-- <md-card-header>
         <span class="md-title">{{ music.music_name }}</span>
       </md-card-header> -->

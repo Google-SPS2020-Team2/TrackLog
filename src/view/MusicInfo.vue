@@ -1,6 +1,6 @@
 <template>
   <div v-bind:id="'music-' + music.id " style="margin-bottom: 1rem;">
-    <md-card>
+    <md-card md-with-hover>
       <!-- <md-card-header>
         <span class="md-title">{{ music.music_name }}</span>
       </md-card-header> -->
@@ -17,6 +17,9 @@
         </div>
       </md-card-content>
       <md-card-actions v-if="!simple">
+        <md-button class="button md-success md-round" v-on:click="to">
+          qwq
+        </md-button>
         <md-button class="button md-success md-round"
                 v-on:click="$emit('delete', index)">
           <md-icon >delete</md-icon> Delete
@@ -48,6 +51,15 @@ export default {
     this.getArtist();
   },
   methods: {
+    to() {
+      this.$router.push({
+        name:'MusicDetail',
+        params: {
+          id: this.music.id,
+          name: this.music.music_name
+        }
+      })
+    },
     getArtist() {
       this.$http.get('/get_artist_info', {
         params: {
