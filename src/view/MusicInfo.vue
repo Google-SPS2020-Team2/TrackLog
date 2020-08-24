@@ -18,7 +18,7 @@
       </md-card-content>
       <md-card-actions v-if="!simple">
         <md-button class="button md-success md-round" v-on:click="to">
-          qwq
+          Comments..
         </md-button>
         <md-button class="button md-success md-round"
                 v-on:click="$emit('delete', index)">

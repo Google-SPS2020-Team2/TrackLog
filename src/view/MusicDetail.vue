@@ -18,20 +18,20 @@
     <div class="main main-raised">
       <div class="section profile-content">
         <div class="container">
-          <div class="practice_list">
-            <div v-if="practices.length" id="practice-list-data">
+          <div class="comment_list">
+            <div v-if="comments.length" id="comment-list-data">
               <md-list>
-                <comment-info v-for="(comment, index) in practices"
+                <comment-info v-for="(comment, index) in comments"
                             v-bind:key="index"
                             v-bind:index="index"
-                            v-bind:practice="comment"
+                            v-bind:comment="comment"
                             >
-                            <p>{{practice}}</p>
+                            <p>{{comment.content}}</p>
                 </comment-info>
               </md-list>
             </div>
-            <div v-else id="practice-list-empty">
-              <p>There is no practice to show.</p>
+            <div v-else id="comment-list-empty">
+              <p>There is no comment to show.</p>
             </div>
           </div>
         </div>
@@ -52,7 +52,7 @@ export default {
     return {
       loading: true,
       loadingMessage: 'Loading...',
-      practices: []
+      comments: []
     }
   },
   props: {
@@ -84,7 +84,7 @@ export default {
             }
         })
             .then(res => {
-                this.practices=res.data.items;
+                this.comments=res.data.items;
                 this.loading = false;
             })
             .catch(err => {
