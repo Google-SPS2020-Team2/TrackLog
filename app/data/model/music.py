@@ -109,8 +109,25 @@ def getCommentAndScore():
         flash(error)
     else:
         cur = (get_db().cursor().execute(
-            "select music_id,player_id,score,content\
-            from practice\
+            "select music_id,player_id,nickname,score,content \
+            from practice,user \
+            where user.id=practice.player_id and practice.music_id=" + str(id)
+        ))
+        my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+        return json.dumps(my_query, cls=encoder, ensure_ascii=False)
+
+@bp.route("/getAverageScore")
+def getAverageScore():
+    error = None
+    id = request.args.get("musicId")
+    if not id:
+        error = "Music ID is required."
+    if error is not None:
+        flash(error)
+    else:
+        cur = (get_db().cursor().execute(
+            "select avg(score) \
+            from practice \
             where music_id=" + str(id)
         ))
         my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
