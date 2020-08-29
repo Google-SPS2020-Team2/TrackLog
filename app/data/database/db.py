@@ -36,7 +36,7 @@ def add_song(song_name, artist):
     artist_id = int(cur['id'])
     cur = db.cursor().execute("select id from music where music_name = ?", (song_name, )).fetchone()
     if cur is None:
-        db.execute('INSERT INTO music (music_name, artist_id, difficulty) VALUES (?, ?, 0)', (song_name, artist_id))
+        db.execute('INSERT INTO music (music_name, artist_id) VALUES (?, ?)', (song_name, artist_id))
         db.commit()
 
 

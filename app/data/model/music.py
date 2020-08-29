@@ -37,7 +37,7 @@ def show():
         page_size = 0
 
     cur = (get_db().cursor().execute(
-        "select id,created,music_name,artist_id,difficulty,(case when id in (select music_id from practice where player_id=" + str(
+        "select id,created,music_name,artist_id,(case when id in (select music_id from practice where player_id=" + str(
             session['user_id']) + ") then 1 else 0 end) as played from music limit ? offset ?",
         (page_size, (page_index - 1) * page_max_size))
     )
@@ -54,7 +54,6 @@ def add():
         jsonData = request.get_json()
         music_name = jsonData["music_name"]
         artist_id = jsonData["artist_id"]
-        difficulty = jsonData["difficulty"]
         error = None
 
         if not music_name:
@@ -69,8 +68,8 @@ def add():
             else:
                 db = get_db()
                 db.execute(
-                    "INSERT INTO music (music_name, artist_id, difficulty) VALUES (?, ?, ?)",
-                    (music_name, artist_id, difficulty),
+                    "INSERT INTO music (music_name, artist_id) VALUES (?, ?)",
+                    (music_name, artist_id),
                 )
                 db.commit()
                 return redirect(url_for("hello"))  # TODO change the url
@@ -99,6 +98,7 @@ def delete():
 
     return redirect(url_for("hello"))  # TODO change the url
 
+
 @bp.route("/getCommentAndScore")
 def getCommentAndScore():
     error = None
@@ -116,9 +116,9 @@ def getCommentAndScore():
         my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
         return json.dumps(my_query, cls=encoder, ensure_ascii=False)
 
+
 class Music(object):
-    def __init__(self, music_name, duration, artist_id, difficulty):
+    def __init__(self, music_name, duration, artist_id):
         self.music_name = music_name
         self.duration = duration
         self.artist_id = artist_id
-        self.difficulty = difficulty

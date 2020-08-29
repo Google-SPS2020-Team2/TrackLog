@@ -185,7 +185,7 @@ def show_favourite():
 
 
     cur = (get_db().cursor().execute(
-        "select id,created,music_name,artist_id,difficulty,\
+        "select id,created,music_name,artist_id,\
         (case when id in (select music_id from practice where player_id="+str(session['user_id']) +
         ") then 1 else 0 end) as played from music where id in (select music_id from favourite where user_id = " + str(session['user_id']) + ") limit ? offset ? ", (page_size, (page_index - 1) * page_max_size)
     ))

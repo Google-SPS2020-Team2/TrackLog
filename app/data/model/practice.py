@@ -89,7 +89,7 @@ def show():
         page_size = 0
 
     cur = (get_db().cursor().execute(
-        "select music.id,music.created,music.music_name,music.artist_id,music.difficulty,practice.content,practice.score\
+        "select music.id,music.created,music.music_name,music.artist_id,practice.content,practice.score\
         from music,practice\
         where music.id=practice.music_id \
         and practice.player_id="+str(session['user_id']) + " limit ? offset ? ", (page_size, (page_index - 1) * page_max_size)
