@@ -1,8 +1,8 @@
 <template>
   <div class="wrapper">
     <parallax
-      class="section page-header header-filter"
-      :style="headerStyle"
+        class="section page-header header-filter"
+        :style="headerStyle"
     >
       <div class="container">
         <div class="md-layout">
@@ -19,25 +19,25 @@
       <div class="section profile-content">
         <div class="container">
           <div v-if="loading" id="music-list-loading">
-              <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
-              <p>{{ loadingMessage }}</p>
-            </div>
+            <md-progress-spinner md-mode="indeterminate"></md-progress-spinner>
+            <p>{{ loadingMessage }}</p>
+          </div>
           <div class="music_list" v-else id="music-list-loaded">
             <div id="music-search-input">
               <md-field>
                 <md-icon>search</md-icon>
                 <label>Search Music</label>
-                <md-input v-model="keyword"></md-input>
+                <md-input v-model="keyword" v-on:keyup.enter="getMusics(1)"></md-input>
               </md-field>
             </div>
             <md-button class="md-success md-round md-just-icon"
-                    style="float: right; margin-top: 0;"
-                    v-on:click="addMusicDialogActive = true">
+                       style="float: right; margin-top: 0;"
+                       v-on:click="addMusicDialogActive = true">
               <md-icon>add</md-icon>
             </md-button>
             <div v-if="musics.length" id="music-list-data">
               <md-list>
-                <music-info v-for="(music, index) in filteredMusics"
+                <music-info v-for="(music, index) in musics"
                             v-bind:key="music.id"
                             v-bind:simple="false"
                             v-bind:index="index"
@@ -49,14 +49,17 @@
               </md-list>
               <div id="musics-pagination" style="text-align: center;">
                 <md-button style="float: left;"
-                          v-bind:disabled="pageIndex <= 1"
-                          v-on:click="showPrevPage()">
+                           v-bind:disabled="pageIndex <= 1"
+                           v-on:click="showPrevPage()">
                   Previous Page
                 </md-button>
-                <md-button disabled>{{ (pageIndex - 1) * pageSize + 1 }} - {{ pageIndex * pageSize }} of {{ totalItems }}</md-button>
+                <md-button disabled>{{ (pageIndex - 1) * pageSize + 1 }} - {{ pageIndex * pageSize }} of {{
+                    totalItems
+                  }}
+                </md-button>
                 <md-button style="float: right;"
-                          v-bind:disabled="pageIndex >= totalPages"
-                          v-on:click="showNextPage()">
+                           v-bind:disabled="pageIndex >= totalPages"
+                           v-on:click="showNextPage()">
                   Next Page
                 </md-button>
               </div>
@@ -70,11 +73,13 @@
                 <form novalidate class="md-layout">
                   <md-field>
                     <label for="dialog-practice-score">Score</label>
-                    <md-input name="dialog-practice-score" id="dialog-practice-score" type="number" v-model="newPractice.score"/>
+                    <md-input name="dialog-practice-score" id="dialog-practice-score" type="number"
+                              v-model="newPractice.score"/>
                   </md-field>
                   <md-field>
                     <label for="dialog-practice-content">Content</label>
-                    <md-textarea md-autogrow name="dialog-practice-content" id="dialog-practice-content" v-model="newPractice.content"/>
+                    <md-textarea md-autogrow name="dialog-practice-content" id="dialog-practice-content"
+                                 v-model="newPractice.content"/>
                   </md-field>
                 </form>
               </md-dialog-content>
@@ -96,23 +101,25 @@
                     <label for="dialog-music-name">Music Name</label>
                     <md-input name="dialog-music-name" id="dialog-music-name" v-model="newMusic.music_name"/>
                   </md-field>
-                  <div class="md-layout md-gutter"> 
+                  <div class="md-layout md-gutter">
                     <div class="md-layout-item">
                       <md-field>
                         <label for="dialog-artist">Artist</label>
-                        <md-select name="dialog-artist" id="dialog-artist"  v-model="newMusic.artist_id">
+                        <md-select name="dialog-artist" id="dialog-artist" v-model="newMusic.artist_id">
                           <md-option
-                            v-for="(artist, index) in artists"
-                            v-bind:key="artist.id"
-                            v-bind:index="index"
-                            v-bind:artist="artist"
-                            :value=parseInt(artist.id)>
-                            {{artist.artist_name}}
+                              v-for="(artist, index) in artists"
+                              v-bind:key="artist.id"
+                              v-bind:index="index"
+                              v-bind:artist="artist"
+                              :value=parseInt(artist.id)>
+                            {{ artist.artist_name }}
                           </md-option>
                         </md-select>
                       </md-field>
                     </div>
-                    <md-button class="md-primary" style="margin: 1rem;" v-on:click="addArtistDialogActive = true">add artist</md-button>
+                    <md-button class="md-primary" style="margin: 1rem;" v-on:click="addArtistDialogActive = true">add
+                      artist
+                    </md-button>
                   </div>
                   <md-field>
                     <label for="dialog-difficulty">Difficulty</label>
@@ -122,10 +129,12 @@
               </md-dialog-content>
               <md-dialog-actions style="margin: 1rem;">
                 <md-button class="md-button md-success" v-on:click="addMusicDialogActive = false">
-                  <md-icon>close</md-icon>Cancel
+                  <md-icon>close</md-icon>
+                  Cancel
                 </md-button>
                 <md-button class="md-button md-success" v-on:click="addMusic">
-                  <md-icon>check</md-icon>Submit
+                  <md-icon>check</md-icon>
+                  Submit
                 </md-button>
               </md-dialog-actions>
             </md-dialog>
@@ -146,22 +155,24 @@
               </md-dialog-content>
               <md-dialog-actions style="margin: 1rem;">
                 <md-button class="md-button md-success" v-on:click="addArtistDialogActive = false">
-                  <md-icon>close</md-icon>Cancel
+                  <md-icon>close</md-icon>
+                  Cancel
                 </md-button>
                 <md-button class="md-button md-success" v-on:click="addArtist">
-                  <md-icon>check</md-icon>Submit
+                  <md-icon>check</md-icon>
+                  Submit
                 </md-button>
               </md-dialog-actions>
             </md-dialog>
 
             <md-dialog-confirm
-              md-title="Delete Music?"
-              v-bind:md-content="'Are you sure you want to delete music ' + deleteMusicName + '?'"
-              md-confirm-text="Yes"
-              md-cancel-text="No"
-              v-bind:md-active.sync="deleteMusicDialogActive"
-              @md-cancel="deleteMusicDialogActive = false"
-              @md-confirm="doDeleteMusic" />
+                md-title="Delete Music?"
+                v-bind:md-content="'Are you sure you want to delete music ' + deleteMusicName + '?'"
+                md-confirm-text="Yes"
+                md-cancel-text="No"
+                v-bind:md-active.sync="deleteMusicDialogActive"
+                @md-cancel="deleteMusicDialogActive = false"
+                @md-confirm="doDeleteMusic"/>
           </div>
         </div>
       </div>
@@ -171,17 +182,18 @@
 
 <script>
 import MusicInfo from "@/view/MusicInfo";
+
 export default {
   name: "MusicList",
   components: {
     'music-info': MusicInfo,
   },
   bodyClass: "list-page",
-  data: function() {
+  data: function () {
     return {
       loading: true,
       loadingMessage: 'Loading...',
-      keyword: '',
+      keyword: this.$route.query.keyword || '',
       pageSize: 0,
       totalItems: 0,
       totalPages: 1,
@@ -229,19 +241,9 @@ export default {
     pageIndex() {
       return Number(this.$route.query.page) || 1;
     },
-    filteredMusics() {
-      if (this.keyword) {
-        const keywordToLowerCase = this.keyword.toLowerCase();
-        return this.musics.filter(m => m.music_name.toLowerCase().indexOf(keywordToLowerCase) >= 0);
-      } else {
-        // No keyword given, return all musics.
-        return this.musics;
-      }
-    }
   },
   created: function () {
-    this.getMusics();
-  
+    this.getMusics(this.pageIndex);
   },
   watch: {
     pageIndex() {
@@ -249,12 +251,25 @@ export default {
     }
   },
   methods: {
-    getMusics() {
-      this.$http.get('/show', {
-        params: {
-          page: this.pageIndex
-        }
-      })
+    getMusics(page = null) {
+      let promise = null;
+      if (this.keyword) {
+        const query = {keyword: this.keyword, page: page ? page : this.pageIndex.toString()};
+        this.$router.push({path: '/music', query: query});
+        promise = this.$http.get('/searchMusic', {
+          params: {
+            musicName: this.keyword,
+            page: this.pageIndex
+          }
+        });
+      } else {
+        promise = this.$http.get('/show', {
+          params: {
+            page: this.pageIndex
+          }
+        });
+      }
+      promise // execute to load musics
           .then(res => {
             this.musics = res.data.items;
             this.pageSize = res.data.pageSize;
@@ -268,10 +283,20 @@ export default {
           });
     },
     showPrevPage() {
-      this.$router.push({path: '/music', query: {page: (this.pageIndex - 1).toString()}});
+      const query = {};
+      if (this.keyword) {
+        query.keyword = this.keyword;
+      }
+      query.page = (this.pageIndex - 1).toString();
+      this.$router.push({path: '/music', query: query});
     },
     showNextPage() {
-      this.$router.push({path: '/music', query: {page: (this.pageIndex + 1).toString()}});
+      const query = {};
+      if (this.keyword) {
+        query.keyword = this.keyword;
+      }
+      query.page = (this.pageIndex + 1).toString();
+      this.$router.push({path: '/music', query: query});
     },
     addPracticeOfMusic(index) {
       /**
