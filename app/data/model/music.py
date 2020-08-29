@@ -116,6 +116,7 @@ def getCommentAndScore():
         my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
         return json.dumps(my_query, cls=encoder, ensure_ascii=False)
 
+
 @bp.route("/getAverageScore")
 def getAverageScore():
     error = None
@@ -132,6 +133,50 @@ def getAverageScore():
         ))
         my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
         return json.dumps(my_query, cls=encoder, ensure_ascii=False)
+
+
+@bp.route("/searchMusic")
+def searchMusic():
+    error = None
+    name = str(request.args["musicName"])
+    if not name:
+        error = "Music name is required."
+    if error is not None:
+        flash(error)
+    else:
+
+        page_index = 1
+        page_max_size = 20
+        page_size = 20
+
+        if "page" in request.args:
+            page_index = int(request.args["page"])
+
+        if "size" in request.args:
+            page_max_size = int(request.args["size"])
+
+        cur = get_db().cursor().execute("select count(*) as total_items from music where music_name like \'%" + name + "%\'").fetchone()
+        total_items = int(cur["total_items"])
+        total_pages = int(total_items / page_max_size)
+        if total_items % page_max_size > 0:
+            total_pages += 1
+            if page_index == total_pages:
+                page_size = total_items % page_max_size
+
+        if total_items == 0:
+            page_index = 0
+            page_size = 0
+
+        cur = (get_db().cursor().execute(
+            "select id,created,music_name,artist_id,(case when id in (select music_id from practice where player_id=" + str(
+                session[
+                    'user_id']) + ") then 1 else 0 end) as played from music where music_name like \'%" + name + "%\' limit ? offset ?",
+            (page_size, (page_index - 1) * page_max_size))
+        )
+        my_query = [dict((cur.description[i][0], value) for i, value in enumerate(row)) for row in cur.fetchall()]
+        res = {'pageIndex': page_index, 'pageSize': page_size, 'totalItems': total_items, 'totalPages': total_pages,
+               'items': my_query}
+        return json.dumps(res, cls=encoder, ensure_ascii=False)
 
 
 class Music(object):
