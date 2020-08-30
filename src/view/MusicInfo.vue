@@ -13,7 +13,6 @@
         </div>
         <div v-else>
           <p>Artist: {{ artist.artist_name }}</p>
-          <p>Difficulty: {{ music.difficulty }}</p>
         </div>
       </md-card-content>
       <md-card-actions v-if="!simple">

@@ -121,10 +121,10 @@
                       artist
                     </md-button>
                   </div>
-                  <md-field>
+                  <!-- <md-field>
                     <label for="dialog-difficulty">Difficulty</label>
                     <md-input name="dialog-difficulty" id="dialog-difficulty" v-model="newMusic.difficulty"/>
-                  </md-field>
+                  </md-field> -->
                 </form>
               </md-dialog-content>
               <md-dialog-actions style="margin: 1rem;">
@@ -210,7 +210,7 @@ export default {
       newMusic: {
         music_name: '',
         artist_id: 0,
-        difficulty: ''
+        // difficulty: ''
       },
       addArtistDialogActive: false,
       newArtist: {
