@@ -33,13 +33,21 @@ const router = new Router({
       path: '/music', 
       name: 'MusicList', 
       components: {default: MusicList, header: MainNavbar, footer: MainFooter},
-      meta: {requiresLogin: true}
+      meta: {requiresLogin: true},
+      props: {
+        header: { colorOnScroll: 200 },
+        footer: { backgroundColor: "black" }
+      }
     },
     {
       path: '/played', 
       name: 'PlayedList', 
       components: {default: PlayedList, header: MainNavbar, footer: MainFooter},
-      meta: {requiresLogin: true}
+      meta: {requiresLogin: true},
+      props: {
+        header: { colorOnScroll: 200 },
+        footer: { backgroundColor: "black" }
+      }
     },
     {
       path: '/user', 

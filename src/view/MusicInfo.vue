@@ -13,6 +13,11 @@
         </div>
         <div v-else>
           <p>Artist: {{ artist.artist_name }}</p>
+        </div>
+        <div v-if="score === null">
+          Still no score info here...
+        </div>
+        <div v-else>
           <p>Average Score: {{ score }}</p>
         </div>
       </md-card-content>
