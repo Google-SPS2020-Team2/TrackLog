@@ -7,7 +7,7 @@
           Loading artist info...
         </p>
         <p class="md-info" v-else>
-          Artist: {{ artist.artist_name }} &amp; Difficulty: {{ music.difficulty }}
+          Artist: {{ artist.artist_name }}
         </p>
       </div>
       <code>/</code>

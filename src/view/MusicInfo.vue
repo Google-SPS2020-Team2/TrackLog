@@ -13,12 +13,17 @@
         </div>
         <div v-else>
           <p>Artist: {{ artist.artist_name }}</p>
-          <p>Difficulty: {{ music.difficulty }}</p>
+        </div>
+        <div v-if="score === null">
+          Still no score info here...
+        </div>
+        <div v-else>
+          <p>Average Score: {{ score }}</p>
         </div>
       </md-card-content>
       <md-card-actions v-if="!simple">
         <md-button class="button md-success md-round" v-on:click="to">
-          qwq
+          Comments..
         </md-button>
         <md-button class="button md-success md-round"
                 v-on:click="$emit('delete', index)">
@@ -44,11 +49,13 @@ export default {
   props: ['simple', 'index', 'music'],
   data: function() {
     return {
-      artist: null
+      artist: null,
+      score: null
     }
   },
   created: function() {
     this.getArtist();
+    this.getScore();
   },
   methods: {
     to() {
@@ -68,6 +75,19 @@ export default {
       })
           .then(res => {
             this.artist = res.data[0];
+          })
+          .catch(err => {
+            console.error(err);
+          })
+    },
+    getScore() {
+      this.$http.get('/getAverageScore', {
+        params: {
+          musicId: this.music.id
+        }
+      })
+          .then(res => {
+            this.score = res.data[0].avg_score;
           })
           .catch(err => {
             console.error(err);
