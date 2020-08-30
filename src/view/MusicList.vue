@@ -244,6 +244,7 @@ export default {
   },
   created: function () {
     this.getMusics(this.pageIndex);
+    this.getArtists();
   },
   watch: {
     pageIndex() {
@@ -358,7 +359,7 @@ export default {
     getArtists() {
       this.$http.get('/show_artist')
           .then(res => {
-            this.artists = res.data;
+            this.artists = res.data.items;
           })
           .catch(err => console.error(err));
     },
