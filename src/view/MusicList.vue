@@ -84,12 +84,12 @@
                 </form>
               </md-dialog-content>
               <md-dialog-actions style="margin: 1rem;">
-                <button class="md-button" v-on:click="addPracticeDialogActive = false">
-                  <md-icon>close</md-icon> &nbsp; <span>Cancel</span>
-                </button>
-                <button class="md-button" v-on:click="doAddPracticeOfMusic">
-                  <md-icon>check</md-icon> &nbsp; <span>Submit</span>
-                </button>
+                <md-button class="md-primary" v-on:click="addPracticeDialogActive = false">
+                  <md-icon>close</md-icon>Cancel
+                </md-button>
+                <md-button class="md-primary" v-on:click="doAddPracticeOfMusic">
+                  <md-icon>check</md-icon>Submit
+                </md-button>
               </md-dialog-actions>
             </md-dialog>
 
