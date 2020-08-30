@@ -13,9 +13,8 @@
         </div>
         <div v-else>
           <p>Artist: {{ artist.artist_name }}</p>
-          <p>Difficulty: {{ music.difficulty }}</p>
           <p>score: {{music.score}}</p>
-          <p v-if="music.content.length" class="content">"{{music.content}}"</p>
+          <p v-if="music.content.length" class="content title">"{{music.content}}"</p>
         </div>
       </md-card-content>
     </md-card>
@@ -53,4 +52,8 @@ export default {
 </script>
 
 <style scoped>
+.content {
+  font-size:1rem;
+  text-align: start;
+}
 </style>
