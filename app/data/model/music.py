@@ -127,7 +127,7 @@ def getAverageScore():
         flash(error)
     else:
         cur = (get_db().cursor().execute(
-            "select avg(score) \
+            "select avg(score) as avg_score\
             from practice \
             where music_id=" + str(id)
         ))
