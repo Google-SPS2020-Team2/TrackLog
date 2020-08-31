@@ -13,6 +13,8 @@ flask = "*"
 flask-restplus = "*"
 gunicorn = "*"
 python-dotenv = "*"
+requests = "*"
+click = "*"
 
 [dev-packages]
 bumpversion = "*"
